@@ -838,7 +838,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function shareOnTwitter(activityName, description) {
     const text = `Check out this activity at Mergington High School: ${activityName} - ${description}`;
     const url = window.location.href;
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer,width=600,height=400");
   }
 
