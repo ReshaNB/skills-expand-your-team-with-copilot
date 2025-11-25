@@ -35,6 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
     technology: { label: "Technology", color: "#e8eaf6", textColor: "#3949ab" },
   };
 
+  // Filter constant for activities with no difficulty specified
+  const NO_DIFFICULTY_FILTER = "none";
+
   // State for activities and filters
   let allActivities = {};
   let currentFilter = "all";
@@ -441,7 +444,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Apply difficulty filter
       if (currentDifficulty) {
-        if (currentDifficulty === "none") {
+        if (currentDifficulty === NO_DIFFICULTY_FILTER) {
           // Show only activities with no difficulty specified
           if (details.difficulty) {
             return;
