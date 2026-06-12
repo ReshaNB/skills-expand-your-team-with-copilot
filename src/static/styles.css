@@ -235,6 +235,34 @@ section h3 {
   letter-spacing: 0.3px;
 }
 
+/* Difficulty Tag */
+.difficulty-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.65rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.difficulty-beginner {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.difficulty-intermediate {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.difficulty-advanced {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
 /* Capacity Indicator */
 .capacity-container {
   margin: 8px 0;
@@ -569,7 +597,8 @@ footer {
 
 .category-filters,
 .day-filters,
-.time-filters {
+.time-filters,
+.difficulty-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -577,7 +606,8 @@ footer {
 
 .category-filter,
 .day-filter,
-.time-filter {
+.time-filter,
+.difficulty-filter {
   background-color: var(--background);
   border: 1px solid var(--border);
   color: var(--text-primary);
@@ -590,7 +620,8 @@ footer {
 
 .category-filter.active,
 .day-filter.active,
-.time-filter.active {
+.time-filter.active,
+.difficulty-filter.active {
   background-color: var(--primary);
   color: white;
   border-color: var(--primary-dark);
@@ -598,7 +629,8 @@ footer {
 
 .category-filter:hover,
 .day-filter:hover,
-.time-filter:hover {
+.time-filter:hover,
+.difficulty-filter:hover {
   background-color: var(--primary-light);
   color: white;
 }
@@ -718,4 +750,53 @@ body.dark-mode .modal-content {
 
 body.dark-mode .search-box input:focus {
   box-shadow: 0 0 0 2px rgba(121, 134, 203, 0.2);
+/* Social Share Buttons */
+.social-share-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+}
+
+.share-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.share-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.share-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.share-twitter:hover {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.share-facebook:hover {
+  background-color: #4267b2;
+  border-color: #4267b2;
+}
+
+.share-email:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
 }

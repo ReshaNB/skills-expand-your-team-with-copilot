@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryFilters = document.querySelectorAll(".category-filter");
   const dayFilters = document.querySelectorAll(".day-filter");
   const timeFilters = document.querySelectorAll(".time-filter");
+  const difficultyFilters = document.querySelectorAll(".difficulty-filter");
 
   // Authentication elements
   const loginButton = document.getElementById("login-button");
@@ -61,12 +62,16 @@ document.addEventListener("DOMContentLoaded", () => {
     technology: { label: "Technology", color: "#e8eaf6", textColor: "#3949ab" },
   };
 
+  // Filter constant for activities with no difficulty specified
+  const NO_DIFFICULTY_FILTER = "none";
+
   // State for activities and filters
   let allActivities = {};
   let currentFilter = "all";
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
+  let currentDifficulty = "";
 
   // Authentication state
   let currentUser = null;
@@ -464,6 +469,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
+      // Apply difficulty filter
+      if (currentDifficulty) {
+        if (currentDifficulty === NO_DIFFICULTY_FILTER) {
+          // Show only activities with no difficulty specified
+          if (details.difficulty) {
+            return;
+          }
+        } else {
+          // Show only activities with the selected difficulty
+          if (details.difficulty !== currentDifficulty) {
+            return;
+          }
+        }
+      }
+
       // Apply search filter
       const searchableContent = [
         name.toLowerCase(),
@@ -533,6 +553,11 @@ document.addEventListener("DOMContentLoaded", () => {
       </span>
     `;
 
+    // Create difficulty tag (only if difficulty is specified)
+    const difficultyTagHtml = details.difficulty
+      ? `<span class="difficulty-tag difficulty-${details.difficulty.toLowerCase()}">${details.difficulty}</span>`
+      : "";
+
     // Create capacity indicator
     const capacityIndicator = `
       <div class="capacity-container ${capacityStatusClass}">
@@ -548,6 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     activityCard.innerHTML = `
       ${tagHtml}
+      ${difficultyTagHtml}
       <h4>${name}</h4>
       <p>${details.description}</p>
       <p class="tooltip">
@@ -579,6 +605,18 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="social-share-container">
+        <span class="share-label">Share:</span>
+        <button class="share-button share-twitter" data-activity="${name}" title="Share on Twitter" aria-label="Share on Twitter">
+          🐦
+        </button>
+        <button class="share-button share-facebook" data-activity="${name}" title="Share on Facebook" aria-label="Share on Facebook">
+          📘
+        </button>
+        <button class="share-button share-email" data-activity="${name}" title="Share via Email" aria-label="Share via Email">
+          ✉️
+        </button>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -603,6 +641,29 @@ document.addEventListener("DOMContentLoaded", () => {
     deleteButtons.forEach((button) => {
       button.addEventListener("click", handleUnregister);
     });
+
+    // Add click handlers for social share buttons
+    const shareTwitterBtn = activityCard.querySelector(".share-twitter");
+    const shareFacebookBtn = activityCard.querySelector(".share-facebook");
+    const shareEmailBtn = activityCard.querySelector(".share-email");
+
+    if (shareTwitterBtn) {
+      shareTwitterBtn.addEventListener("click", () => {
+        shareOnTwitter(name, details.description);
+      });
+    }
+
+    if (shareFacebookBtn) {
+      shareFacebookBtn.addEventListener("click", () => {
+        shareOnFacebook(name);
+      });
+    }
+
+    if (shareEmailBtn) {
+      shareEmailBtn.addEventListener("click", () => {
+        shareViaEmail(name, details.description, formattedSchedule);
+      });
+    }
 
     // Add click handler for register button (only when authenticated)
     if (currentUser) {
@@ -665,6 +726,19 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update current time filter and fetch activities
       currentTimeRange = button.dataset.time;
       fetchActivities();
+    });
+  });
+
+  // Add event listeners for difficulty filter buttons
+  difficultyFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+      // Update active class
+      difficultyFilters.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      // Update current difficulty filter and display filtered activities
+      currentDifficulty = button.dataset.difficulty;
+      displayFilteredActivities();
     });
   });
 
@@ -824,6 +898,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     );
+  }
+
+  // Social sharing functions
+  function shareOnTwitter(activityName, description) {
+    const text = `Check out this activity at Mergington High School: ${activityName} - ${description}`;
+    const url = window.location.href;
+    const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, "_blank", "noopener,noreferrer,width=600,height=400");
+  }
+
+  function shareOnFacebook(activityName) {
+    const url = window.location.href;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(`Join ${activityName} at Mergington High School!`)}`;
+    window.open(facebookUrl, "_blank", "noopener,noreferrer,width=600,height=400");
+  }
+
+  function shareViaEmail(activityName, description, schedule) {
+    const subject = `Check out ${activityName} at Mergington High School!`;
+    const body = `I wanted to share this activity with you:\n\n${activityName}\n\n${description}\n\nSchedule: ${schedule}\n\nLearn more: ${window.location.href}`;
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
   }
 
   // Show message function
